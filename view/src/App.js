@@ -30,13 +30,13 @@ function App() {
         <div className="header">
           <div className="header-left">
             <h1 className="header-title">Give constructive feedback to a high performer</h1>
-            <div className="info-icon">ℹ</div>
+            <div className="info-icon material-icons">info</div>
           </div>
           <div className="header-right">
             <div className="timer">01:19</div>
             <div className="header-icons">
-              <div className="icon settings-icon">⚙</div>
-              <div className="icon help-icon">?</div>
+              <div className="icon settings-icon material-icons">settings</div>
+              <div className="icon help-icon material-icons">help</div>
             </div>
           </div>
         </div>

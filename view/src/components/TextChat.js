@@ -61,7 +61,7 @@ function TextChat() {
       </div>
 
       {/* Input Area */}
-      <div className="input-area">
+      <div>
         <div className="input-container">
           <input
             type="text"
@@ -76,7 +76,7 @@ function TextChat() {
             className="send-button"
             disabled={!inputText.trim()}
           >
-            →
+            <span className="material-icons">send</span>
           </button>
         </div>
       </div>

@@ -75,11 +75,11 @@ export const mockFeedback = {
 export const userProfile = {
   name: "You",
   role: "Manager",
-  avatar: "👤"
+  avatar: "person"
 };
 
 export const aiProfile = {
   name: "Sam",
   role: "Direct Report",
-  avatar: "⭐"
+  avatar: "star"
 };

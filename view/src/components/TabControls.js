@@ -2,7 +2,6 @@ import React from 'react';
 
 function TabControls({ activeTab, onTabSwitch, onEndSession }) {
   return (
-    <div className="tab-controls">
       <div className="control-buttons">
         {/* Microphone button - changes based on active tab */}
         {activeTab === 'voice' ? (
@@ -10,7 +9,7 @@ function TabControls({ activeTab, onTabSwitch, onEndSession }) {
             className="control-button mic-button active-prominent"
             onClick={() => onTabSwitch('voice')}
           >
-            <div className="mic-icon">🎤</div>
+            <div className="mic-icon material-icons">mic</div>
             <span className="button-text">Speak</span>
           </button>
         ) : (
@@ -18,7 +17,7 @@ function TabControls({ activeTab, onTabSwitch, onEndSession }) {
             className="control-button mic-button-icon"
             onClick={() => onTabSwitch('voice')}
           >
-            <div className="mic-icon">🎤</div>
+            <div className="mic-icon material-icons">mic</div>
           </button>
         )}
 
@@ -28,7 +27,7 @@ function TabControls({ activeTab, onTabSwitch, onEndSession }) {
             className="control-button write-button active-prominent"
             onClick={() => onTabSwitch('text')}
           >
-            <div className="write-icon">✏</div>
+            <div className="write-icon material-icons">edit</div>
             <span className="button-text">Write</span>
           </button>
         ) : (
@@ -36,7 +35,7 @@ function TabControls({ activeTab, onTabSwitch, onEndSession }) {
             className="control-button write-button-icon"
             onClick={() => onTabSwitch('text')}
           >
-            <div className="write-icon">✏</div>
+            <div className="write-icon material-icons">edit</div>
           </button>
         )}
 
@@ -48,7 +47,6 @@ function TabControls({ activeTab, onTabSwitch, onEndSession }) {
           End session
         </button>
       </div>
-    </div>
   );
 }
 

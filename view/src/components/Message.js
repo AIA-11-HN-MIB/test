@@ -11,12 +11,12 @@ function Message({ message }) {
       </div>
       {!isUser && (
         <div className="message-actions">
-          <div className="action-icon reply-icon">↻</div>
-          <div className="action-icon profile-icon">👤</div>
+          <div className="action-icon reply-icon material-icons">reply</div>
+          <div className="action-icon profile-icon material-icons">person</div>
         </div>
       )}
       {!isUser && (
-        <div className="ai-indicator">✨</div>
+        <div className="ai-indicator material-icons">auto_awesome</div>
       )}
     </div>
   );
