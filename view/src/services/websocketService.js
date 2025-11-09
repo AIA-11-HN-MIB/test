@@ -108,10 +108,11 @@ class WebSocketService {
     }
   }
 
-  sendUserAnswer(text) {
+  sendUserAnswer(questionId, answerText) {
     this.sendMessage({
-      type: 'user_answer',
-      text,
+      type: 'text_answer',
+      question_id: questionId,
+      answer_text: answerText,
     });
   }
 

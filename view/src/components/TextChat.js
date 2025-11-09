@@ -10,6 +10,7 @@ function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }
   const [inputText, setInputText] = useState('');
   const [connectionStatus, setConnectionStatus] = useState(CONNECTION_STATUS.DISCONNECTED);
   const [currentProgress, setCurrentProgress] = useState({ index: 0, total: 0 });
+  const [currentQuestionId, setCurrentQuestionId] = useState(null);
   const messagesEndRef = useRef(null);
   const isInitialized = useRef(false);
 
@@ -36,7 +37,7 @@ function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }
       websocketService.onStatusChange(setConnectionStatus);
 
       // Connect
-      websocketService.connect();
+      websocketService.connect(wsUrl);
     } catch (error) {
       toast.error('Failed to connect to interview service');
       console.error('WebSocket initialization error:', error);
@@ -58,6 +59,9 @@ function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }
     };
 
     setMessages(prev => [...prev, aiMessage]);
+
+    // Track current question ID
+    setCurrentQuestionId(message.question_id);
 
     // Update progress
     const progress = {
@@ -95,6 +99,12 @@ function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }
     }
 
     try {
+      // Check if we have a current question ID
+      if (!currentQuestionId) {
+        toast.warning('No active question to answer');
+        return;
+      }
+
       // Add user message to UI
       const newMessage = {
         id: Date.now(),
@@ -104,10 +114,11 @@ function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }
         type: 'text',
       };
       setMessages(prev => [...prev, newMessage]);
+      const answerText = inputText;
       setInputText('');
 
       // Send via WebSocket
-      websocketService.sendUserAnswer(inputText);
+      websocketService.sendUserAnswer(currentQuestionId, answerText);
     } catch (error) {
       toast.error('Failed to send message');
       console.error('Send message error:', error);
