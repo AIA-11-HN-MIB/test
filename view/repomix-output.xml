@@ -1,0 +1,2356 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.gitignore
+.repomixignore
+CLAUDE.md
+openapi.json
+package.json
+public/favicon.ico
+public/index.html
+public/logo192.png
+public/logo512.png
+public/manifest.json
+public/robots.txt
+README.md
+src/App.css
+src/App.js
+src/App.test.js
+src/components/FeedbackModal.js
+src/components/Message.js
+src/components/TabControls.js
+src/components/TextChat.js
+src/components/VoiceChat.js
+src/data/mockData.js
+src/index.css
+src/index.js
+src/logo.svg
+src/reportWebVitals.js
+src/setupTests.js
+src/styles/App.css
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".gitignore">
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.claude
+.opencode
+</file>
+
+<file path=".repomixignore">
+docs/*
+plans/*
+assets/*
+dist/*
+coverage/*
+build/*
+ios/*
+android/*
+tests/*
+__tests__/*
+__pycache__/*
+node_modules/*
+
+.opencode/*
+.claude/*
+.serena/*
+.pnpm-store/*
+.github/*
+.dart_tool/*
+.idea/*
+.husky/*
+.venv/*
+</file>
+
+<file path="CLAUDE.md">
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Role & Responsibilities
+
+Your role is to analyze user requirements, delegate tasks to appropriate sub-agents, and ensure cohesive delivery of features that meet specifications and architectural standards.
+
+## Workflows
+
+- Primary workflow: `./.claude/workflows/primary-workflow.md`
+- Development rules: `./.claude/workflows/development-rules.md`
+- Orchestration protocols: `./.claude/workflows/orchestration-protocol.md`
+- Documentation management: `./.claude/workflows/documentation-management.md`
+- And other workflows: `./.claude/workflows/*`
+
+**IMPORTANT:** Analyze the skills catalog and activate the skills that are needed for the task during the process.
+**IMPORTANT:** You must follow strictly the development rules in `./.claude/workflows/development-rules.md` file.
+**IMPORTANT:** Before you plan or proceed any implementation, always read the `./README.md` file first to get context.
+**IMPORTANT:** Sacrifice grammar for the sake of concision when writing reports.
+**IMPORTANT:** In reports, list any unresolved questions at the end, if any.
+**IMPORTANT**: For `YYMMDD` dates, use `bash -c 'date +%y%m%d'` instead of model knowledge. Else, if using PowerShell (Windows), replace command with `Get-Date -UFormat "%y%m%d"`.
+
+## Documentation Management
+
+We keep all important docs in `./docs` folder and keep updating them, structure like below:
+
+```
+./docs
+├── project-overview-pdr.md
+├── code-standards.md
+├── codebase-summary.md
+├── design-guidelines.md
+├── deployment-guide.md
+├── system-architecture.md
+└── project-roadmap.md
+```
+
+**IMPORTANT:** *MUST READ* and *MUST COMPLY* all *INSTRUCTIONS* in project `./CLAUDE.md`, especially *WORKFLOWS* section is *CRITICALLY IMPORTANT*, this rule is *MANDATORY. NON-NEGOTIABLE. NO EXCEPTIONS. MUST REMEMBER AT ALL TIMES!!!*
+</file>
+
+<file path="openapi.json">
+{
+    "openapi": "3.1.0",
+    "info": {
+      "title": "Elios AI Interview Service",
+      "description": "AI-powered mock interview platform",
+      "version": "0.1.0"
+    },
+    "paths": {
+      "/api/interviews/plan": {
+        "post": {
+          "tags": [
+            "Interviews",
+            "Interviews"
+          ],
+          "summary": "Plan interview with adaptive questions",
+          "description": "Plan interview by generating n questions with ideal answers.\n\nThis endpoint triggers the pre-planning phase:\n1. Calculates n based on skill diversity (max 5)\n2. Generates n questions with ideal_answer + rationale\n3. Returns interview with status=PREPARING (async process)\n\nArgs:\n    request: Planning request with cv_analysis_id and candidate_id\n    session: Database session\n\nReturns:\n    Planning status with interview_id\n\nRaises:\n    HTTPException: If CV analysis not found",
+          "operationId": "plan_interview_api_interviews_plan_post",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanInterviewRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "202": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PlanningStatusResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/interviews/{interview_id}/plan": {
+        "get": {
+          "tags": [
+            "Interviews",
+            "Interviews"
+          ],
+          "summary": "Get interview planning status",
+          "description": "Get interview planning status.\n\nArgs:\n    interview_id: Interview UUID\n    session: Database session\n\nReturns:\n    Planning status details\n\nRaises:\n    HTTPException: If interview not found",
+          "operationId": "get_planning_status_api_interviews__interview_id__plan_get",
+          "parameters": [
+            {
+              "name": "interview_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid",
+                "title": "Interview Id"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PlanningStatusResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/interviews/{interview_id}/start": {
+        "put": {
+          "tags": [
+            "Interviews",
+            "Interviews"
+          ],
+          "summary": "Start interview (move to IN_PROGRESS)",
+          "description": "Start interview session.\n\nArgs:\n    interview_id: Interview UUID\n    session: Database session\n\nReturns:\n    Updated interview details\n\nRaises:\n    HTTPException: If interview not found or invalid state",
+          "operationId": "start_interview_api_interviews__interview_id__start_put",
+          "parameters": [
+            {
+              "name": "interview_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid",
+                "title": "Interview Id"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/InterviewResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "HTTPValidationError": {
+          "properties": {
+            "detail": {
+              "items": {
+                "$ref": "#/components/schemas/ValidationError"
+              },
+              "type": "array",
+              "title": "Detail"
+            }
+          },
+          "type": "object",
+          "title": "HTTPValidationError"
+        },
+        "InterviewResponse": {
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Id"
+            },
+            "candidate_id": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Candidate Id"
+            },
+            "status": {
+              "type": "string",
+              "title": "Status"
+            },
+            "cv_analysis_id": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cv Analysis Id"
+            },
+            "question_count": {
+              "type": "integer",
+              "title": "Question Count"
+            },
+            "current_question_index": {
+              "type": "integer",
+              "title": "Current Question Index"
+            },
+            "progress_percentage": {
+              "type": "number",
+              "title": "Progress Percentage"
+            },
+            "ws_url": {
+              "type": "string",
+              "title": "Ws Url"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Created At"
+            },
+            "started_at": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Started At"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id",
+            "candidate_id",
+            "status",
+            "cv_analysis_id",
+            "question_count",
+            "current_question_index",
+            "progress_percentage",
+            "ws_url",
+            "created_at",
+            "started_at"
+          ],
+          "title": "InterviewResponse",
+          "description": "Response with interview details and WebSocket URL."
+        },
+        "PlanInterviewRequest": {
+          "properties": {
+            "cv_analysis_id": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Cv Analysis Id"
+            },
+            "candidate_id": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Candidate Id"
+            }
+          },
+          "type": "object",
+          "required": [
+            "cv_analysis_id",
+            "candidate_id"
+          ],
+          "title": "PlanInterviewRequest",
+          "description": "Request to plan interview with adaptive questions."
+        },
+        "PlanningStatusResponse": {
+          "properties": {
+            "interview_id": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Interview Id"
+            },
+            "status": {
+              "type": "string",
+              "title": "Status"
+            },
+            "planned_question_count": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Planned Question Count"
+            },
+            "plan_metadata": {
+              "anyOf": [
+                {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Plan Metadata"
+            },
+            "message": {
+              "type": "string",
+              "title": "Message"
+            }
+          },
+          "type": "object",
+          "required": [
+            "interview_id",
+            "status",
+            "planned_question_count",
+            "plan_metadata",
+            "message"
+          ],
+          "title": "PlanningStatusResponse",
+          "description": "Response with planning status."
+        },
+        "ValidationError": {
+          "properties": {
+            "loc": {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ]
+              },
+              "type": "array",
+              "title": "Location"
+            },
+            "msg": {
+              "type": "string",
+              "title": "Message"
+            },
+            "type": {
+              "type": "string",
+              "title": "Error Type"
+            }
+          },
+          "type": "object",
+          "required": [
+            "loc",
+            "msg",
+            "type"
+          ],
+          "title": "ValidationError"
+        }
+      }
+    }
+  }
+</file>
+
+<file path="package.json">
+{
+  "name": "view",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
+</file>
+
+<file path="public/index.html">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>
+</file>
+
+<file path="public/manifest.json">
+{
+  "short_name": "React App",
+  "name": "Create React App Sample",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
+</file>
+
+<file path="public/robots.txt">
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow:
+</file>
+
+<file path="README.md">
+# Getting Started with Create React App
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
+
+### `npm test`
+
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run eject`
+
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+</file>
+
+<file path="src/App.css">
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+</file>
+
+<file path="src/App.js">
+import React, { useState } from 'react';
+import TextChat from './components/TextChat';
+import VoiceChat from './components/VoiceChat';
+import TabControls from './components/TabControls';
+import FeedbackModal from './components/FeedbackModal';
+import './styles/App.css';
+
+function App() {
+  const [activeTab, setActiveTab] = useState('text'); // 'text' or 'voice'
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [sessionEnded, setSessionEnded] = useState(false);
+
+  const handleTabSwitch = (tab) => {
+    setActiveTab(tab);
+  };
+
+  const handleEndSession = () => {
+    setShowFeedback(true);
+  };
+
+  const handleCloseFeedback = () => {
+    setShowFeedback(false);
+    setSessionEnded(true);
+  };
+
+  return (
+    <div className="app">
+      <div className="app-container">
+        {/* Header */}
+        <div className="header">
+          <div className="header-left">
+            <h1 className="header-title">Give constructive feedback to a high performer</h1>
+            <div className="info-icon material-icons">info</div>
+          </div>
+          <div className="header-right">
+            <div className="timer">01:19</div>
+            <div className="header-icons">
+              <div className="icon settings-icon material-icons">settings</div>
+              <div className="icon help-icon material-icons">help</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="main-content">
+          {activeTab === 'text' ? (
+            <TextChat />
+          ) : (
+            <VoiceChat />
+          )}
+        </div>
+
+        {/* Bottom Controls */}
+        <TabControls
+          activeTab={activeTab}
+          onTabSwitch={handleTabSwitch}
+          onEndSession={handleEndSession}
+        />
+      </div>
+
+      {/* Feedback Modal */}
+      {showFeedback && (
+        <FeedbackModal onClose={handleCloseFeedback} />
+      )}
+    </div>
+  );
+}
+
+export default App;
+</file>
+
+<file path="src/App.test.js">
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+</file>
+
+<file path="src/components/FeedbackModal.js">
+import React from 'react';
+import { mockFeedback } from '../data/mockData';
+
+function FeedbackModal({ onClose }) {
+  return (
+    <div className="modal-overlay">
+      <div className="feedback-modal">
+        <div className="modal-header">
+          <h2>Session Feedback</h2>
+          <button className="close-button" onClick={onClose}>×</button>
+        </div>
+
+        <div className="modal-content">
+          {/* Overall Score */}
+          <div className="score-section">
+            <div className="overall-score">
+              <div className="score-number">{mockFeedback.overallScore}</div>
+              <div className="score-label">Overall Performance</div>
+            </div>
+          </div>
+
+          {/* Category Scores */}
+          <div className="categories-section">
+            <h3>Performance Breakdown</h3>
+            <div className="categories-grid">
+              {mockFeedback.categories.map((category, index) => (
+                <div key={index} className="category-card">
+                  <div className="category-name">{category.name}</div>
+                  <div className="category-score">{category.score}</div>
+                  <div className="category-feedback">{category.feedback}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Strengths */}
+          <div className="strengths-section">
+            <h3>Strengths</h3>
+            <ul className="strengths-list">
+              {mockFeedback.strengths.map((strength, index) => (
+                <li key={index} className="strength-item">✓ {strength}</li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Areas for Improvement */}
+          <div className="improvement-section">
+            <h3>Areas for Improvement</h3>
+            <ul className="improvement-list">
+              {mockFeedback.areasForImprovement.map((area, index) => (
+                <li key={index} className="improvement-item">• {area}</li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Next Steps */}
+          <div className="next-steps-section">
+            <h3>Recommended Next Steps</h3>
+            <ul className="next-steps-list">
+              {mockFeedback.nextSteps.map((step, index) => (
+                <li key={index} className="next-step-item">→ {step}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="modal-footer">
+          <button className="close-feedback-button" onClick={onClose}>
+            Close Feedback
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default FeedbackModal;
+</file>
+
+<file path="src/components/Message.js">
+import React from 'react';
+
+function Message({ message }) {
+  const isUser = message.sender === 'user';
+
+  return (
+    <div className={`message-wrapper ${isUser ? 'user-message' : 'ai-message'}`}>
+      <div className={`message-bubble ${isUser ? 'user-bubble' : 'ai-bubble'}`}>
+        <div className="message-text">{message.text}</div>
+        <div className="message-timestamp">{message.timestamp}</div>
+      </div>
+      {!isUser && (
+        <div className="message-actions">
+          <div className="action-icon reply-icon material-icons">reply</div>
+          <div className="action-icon profile-icon material-icons">person</div>
+        </div>
+      )}
+      {!isUser && (
+        <div className="ai-indicator material-icons">auto_awesome</div>
+      )}
+    </div>
+  );
+}
+
+export default Message;
+</file>
+
+<file path="src/components/TabControls.js">
+import React from 'react';
+
+function TabControls({ activeTab, onTabSwitch, onEndSession }) {
+  return (
+      <div className="control-buttons">
+        {/* Microphone button - changes based on active tab */}
+        {activeTab === 'voice' ? (
+          <button
+            className="control-button mic-button active-prominent"
+            onClick={() => onTabSwitch('voice')}
+          >
+            <div className="mic-icon material-icons">mic</div>
+            <span className="button-text">Speak</span>
+          </button>
+        ) : (
+          <button
+            className="control-button mic-button-icon"
+            onClick={() => onTabSwitch('voice')}
+          >
+            <div className="mic-icon material-icons">mic</div>
+          </button>
+        )}
+
+        {/* Write button - changes based on active tab */}
+        {activeTab === 'text' ? (
+          <button
+            className="control-button write-button active-prominent"
+            onClick={() => onTabSwitch('text')}
+          >
+            <div className="write-icon material-icons">edit</div>
+            <span className="button-text">Write</span>
+          </button>
+        ) : (
+          <button
+            className="control-button write-button-icon"
+            onClick={() => onTabSwitch('text')}
+          >
+            <div className="write-icon material-icons">edit</div>
+          </button>
+        )}
+
+        {/* End session button */}
+        <button
+          className="control-button end-button"
+          onClick={onEndSession}
+        >
+          End session
+        </button>
+      </div>
+  );
+}
+
+export default TabControls;
+</file>
+
+<file path="src/components/TextChat.js">
+import React, { useState, useRef, useEffect } from 'react';
+import Message from './Message';
+import { mockMessages } from '../data/mockData';
+
+function TextChat() {
+  const [messages, setMessages] = useState(mockMessages);
+  const [inputText, setInputText] = useState('');
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleSendMessage = () => {
+    if (inputText.trim()) {
+      const newMessage = {
+        id: messages.length + 1,
+        text: inputText,
+        sender: 'user',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        type: 'text'
+      };
+      setMessages([...messages, newMessage]);
+      setInputText('');
+
+      // Simulate AI response after a delay
+      setTimeout(() => {
+        const aiResponse = {
+          id: messages.length + 2,
+          text: "That's a great point. Can you tell me more about how you approached that situation?",
+          sender: 'ai',
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          type: 'text'
+        };
+        setMessages(prev => [...prev, aiResponse]);
+      }, 1000);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  return (
+    <div className="text-chat">
+      {/* Messages Area */}
+      <div className="messages-container">
+        <div className="messages-list">
+          {messages.map((message) => (
+            <Message key={message.id} message={message} />
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+      </div>
+
+      {/* Input Area */}
+      <div>
+        <div className="input-container">
+          <input
+            type="text"
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Write a response..."
+            className="message-input"
+          />
+          <button
+            onClick={handleSendMessage}
+            className="send-button"
+            disabled={!inputText.trim()}
+          >
+            <span className="material-icons">send</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default TextChat;
+</file>
+
+<file path="src/components/VoiceChat.js">
+import React, { useState, useEffect, useRef } from 'react';
+import { userProfile, aiProfile } from '../data/mockData';
+
+function VoiceChat() {
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [audioLevel, setAudioLevel] = useState(0);
+  const intervalRef = useRef(null);
+
+  const simulateAudioLevel = () => {
+    // Simulate realistic audio levels with random variations
+    const baseLevel = Math.random() * 0.8 + 0.2; // Random between 0.2 and 1.0
+    const variation = (Math.random() - 0.5) * 0.3; // Random variation of ±0.15
+    const newLevel = Math.max(0, Math.min(1, baseLevel + variation));
+    setAudioLevel(newLevel);
+  };
+
+  const handleMicClick = () => {
+    setIsSpeaking(!isSpeaking);
+    // Simulate speaking state for a few seconds
+    if (!isSpeaking) {
+      // Start audio level simulation
+      intervalRef.current = setInterval(simulateAudioLevel, 100);
+
+      setTimeout(() => {
+        setIsSpeaking(false);
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          setAudioLevel(0);
+        }
+      }, 3000);
+    } else {
+      // Stop audio level simulation
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        setAudioLevel(0);
+      }
+    }
+  };
+
+  // Cleanup interval on component unmount
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <div className="voice-chat">
+      {/* Background decorations */}
+      <div className="voice-background">
+        <div className="decoration decoration-top-left">
+          <div className="shelf">
+            <div className="book"></div>
+            <div className="book"></div>
+            <div className="vase"></div>
+          </div>
+        </div>
+        <div className="decoration decoration-mid-left">
+          <div className="shelf">
+            <div className="plant plant-red"></div>
+            <div className="plant plant-cactus"></div>
+            <div className="object"></div>
+          </div>
+        </div>
+        <div className="decoration decoration-top-right">
+          <div className="frame frame-large">
+            <div className="artwork"></div>
+          </div>
+          <div className="frame frame-small">
+            <div className="landscape"></div>
+          </div>
+          <div className="stickies">
+            <div className="sticky sticky-smiley">😊</div>
+            <div className="sticky sticky-eye">👁</div>
+            <div className="sticky sticky-lines">☰</div>
+          </div>
+        </div>
+        <div className="decoration decoration-bottom-left">
+          <div className="monitor"></div>
+          <div className="papers"></div>
+        </div>
+        <div className="decoration decoration-bottom-right">
+          <div className="plant plant-large"></div>
+          <div className="books-stack"></div>
+          <div className="coffee-mug"></div>
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className="voice-content">
+        {/* Profile cards */}
+        <div className="profile-cards">
+          <div className="profile-card user-card">
+            <div className="profile-avatar user-avatar">
+              <div className="avatar-placeholder material-icons">person</div>
+            </div>
+            <div className="profile-info">
+              <div className="profile-name">{userProfile.name}</div>
+              <div className="profile-role">{userProfile.role}</div>
+            </div>
+          </div>
+
+          <div className="profile-card ai-card">
+            <div className="profile-avatar ai-avatar">
+              <div className="avatar-placeholder material-icons">star</div>
+            </div>
+            <div className="profile-info">
+              <div className="profile-name">{aiProfile.name}</div>
+              <div className="profile-role">{aiProfile.role}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Connection indicator */}
+        <div className="connection-line"></div>
+
+        {/* Instructions */}
+        <div className="voice-instructions">
+          Press the mic button to start speaking
+        </div>
+
+        {/* Mic Button */}
+        <div className="voice-mic-container">
+          {/* Sound Wave Animation */}
+          {isSpeaking && (
+            <div className="sound-wave-container">
+              <div
+                className="sound-wave sound-wave-1"
+                style={{
+                  '--audio-level': audioLevel,
+                  '--wave-intensity': Math.max(0.15, audioLevel * 0.4)
+                }}
+              ></div>
+              <div
+                className="sound-wave sound-wave-2"
+                style={{
+                  '--audio-level': audioLevel,
+                  '--wave-intensity': Math.max(0.1, audioLevel * 0.35)
+                }}
+              ></div>
+              <div
+                className="sound-wave sound-wave-3"
+                style={{
+                  '--audio-level': audioLevel,
+                  '--wave-intensity': Math.max(0.05, audioLevel * 0.3)
+                }}
+              ></div>
+              <div
+                className="sound-wave sound-wave-4"
+                style={{
+                  '--audio-level': audioLevel,
+                  '--wave-intensity': Math.max(0.03, audioLevel * 0.25)
+                }}
+              ></div>
+              <div
+                className="sound-wave sound-wave-5"
+                style={{
+                  '--audio-level': audioLevel,
+                  '--wave-intensity': Math.max(0.01, audioLevel * 0.2)
+                }}
+              ></div>
+            </div>
+          )}
+
+          <button
+            className={`voice-mic-button ${isSpeaking ? 'recording' : ''}`}
+            onClick={handleMicClick}
+          >
+            <span className="material-icons">mic</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default VoiceChat;
+</file>
+
+<file path="src/data/mockData.js">
+// Mock conversation data for the chat interface
+export const mockMessages = [
+  {
+    id: 1,
+    text: "Hello! It's great to see you. I understand you wanted to check in with me about my performance and communication with stakeholders.",
+    sender: "ai",
+    timestamp: "01:19",
+    type: "text"
+  },
+  {
+    id: 2,
+    text: "Thank you for taking the time to meet with me. I've been working on several projects and would love to get your feedback on how I'm doing.",
+    sender: "user",
+    timestamp: "01:25",
+    type: "text"
+  },
+  {
+    id: 3,
+    text: "I'd be happy to provide feedback. Let's start with your recent work on the client presentation. How do you feel that went?",
+    sender: "ai",
+    timestamp: "01:26",
+    type: "text"
+  },
+  {
+    id: 4,
+    text: "I think it went well overall. I prepared thoroughly and made sure to address all the key points we discussed beforehand.",
+    sender: "user",
+    timestamp: "01:28",
+    type: "text"
+  }
+];
+
+export const mockFeedback = {
+  overallScore: 8.5,
+  categories: [
+    {
+      name: "Communication",
+      score: 9.0,
+      feedback: "Excellent communication skills demonstrated throughout the session."
+    },
+    {
+      name: "Technical Knowledge",
+      score: 8.0,
+      feedback: "Strong technical foundation with room for growth in advanced topics."
+    },
+    {
+      name: "Problem Solving",
+      score: 8.5,
+      feedback: "Good analytical thinking and systematic approach to challenges."
+    },
+    {
+      name: "Collaboration",
+      score: 9.0,
+      feedback: "Works well with team members and stakeholders effectively."
+    }
+  ],
+  strengths: [
+    "Clear and articulate communication",
+    "Strong preparation and organization",
+    "Good stakeholder management",
+    "Proactive approach to challenges"
+  ],
+  areasForImprovement: [
+    "Could benefit from more technical depth in certain areas",
+    "Consider taking on more complex projects",
+    "Opportunity to mentor junior team members"
+  ],
+  nextSteps: [
+    "Continue current project management approach",
+    "Take on a more challenging technical project",
+    "Consider leadership opportunities"
+  ]
+};
+
+export const userProfile = {
+  name: "You",
+  role: "Manager",
+  avatar: "person"
+};
+
+export const aiProfile = {
+  name: "Sam",
+  role: "Direct Report",
+  avatar: "star"
+};
+</file>
+
+<file path="src/index.css">
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+</file>
+
+<file path="src/index.js">
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './styles/App.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
+</file>
+
+<file path="src/logo.svg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 841.9 595.3"><g fill="#61DAFB"><path d="M666.3 296.5c0-32.5-40.7-63.3-103.1-82.4 14.4-63.6 8-114.2-20.2-130.4-6.5-3.8-14.1-5.6-22.4-5.6v22.3c4.6 0 8.3.9 11.4 2.6 13.6 7.8 19.5 37.5 14.9 75.7-1.1 9.4-2.9 19.3-5.1 29.4-19.6-4.8-41-8.5-63.5-10.9-13.5-18.5-27.5-35.3-41.6-50 32.6-30.3 63.2-46.9 84-46.9V78c-27.5 0-63.5 19.6-99.9 53.6-36.4-33.8-72.4-53.2-99.9-53.2v22.3c20.7 0 51.4 16.5 84 46.6-14 14.7-28 31.4-41.3 49.9-22.6 2.4-44 6.1-63.6 11-2.3-10-4-19.7-5.2-29-4.7-38.2 1.1-67.9 14.6-75.8 3-1.8 6.9-2.6 11.5-2.6V78.5c-8.4 0-16 1.8-22.6 5.6-28.1 16.2-34.4 66.7-19.9 130.1-62.2 19.2-102.7 49.9-102.7 82.3 0 32.5 40.7 63.3 103.1 82.4-14.4 63.6-8 114.2 20.2 130.4 6.5 3.8 14.1 5.6 22.5 5.6 27.5 0 63.5-19.6 99.9-53.6 36.4 33.8 72.4 53.2 99.9 53.2 8.4 0 16-1.8 22.6-5.6 28.1-16.2 34.4-66.7 19.9-130.1 62-19.1 102.5-49.9 102.5-82.3zm-130.2-66.7c-3.7 12.9-8.3 26.2-13.5 39.5-4.1-8-8.4-16-13.1-24-4.6-8-9.5-15.8-14.4-23.4 14.2 2.1 27.9 4.7 41 7.9zm-45.8 106.5c-7.8 13.5-15.8 26.3-24.1 38.2-14.9 1.3-30 2-45.2 2-15.1 0-30.2-.7-45-1.9-8.3-11.9-16.4-24.6-24.2-38-7.6-13.1-14.5-26.4-20.8-39.8 6.2-13.4 13.2-26.8 20.7-39.9 7.8-13.5 15.8-26.3 24.1-38.2 14.9-1.3 30-2 45.2-2 15.1 0 30.2.7 45 1.9 8.3 11.9 16.4 24.6 24.2 38 7.6 13.1 14.5 26.4 20.8 39.8-6.3 13.4-13.2 26.8-20.7 39.9zm32.3-13c5.4 13.4 10 26.8 13.8 39.8-13.1 3.2-26.9 5.9-41.2 8 4.9-7.7 9.8-15.6 14.4-23.7 4.6-8 8.9-16.1 13-24.1zM421.2 430c-9.3-9.6-18.6-20.3-27.8-32 9 .4 18.2.7 27.5.7 9.4 0 18.7-.2 27.8-.7-9 11.7-18.3 22.4-27.5 32zm-74.4-58.9c-14.2-2.1-27.9-4.7-41-7.9 3.7-12.9 8.3-26.2 13.5-39.5 4.1 8 8.4 16 13.1 24 4.7 8 9.5 15.8 14.4 23.4zM420.7 163c9.3 9.6 18.6 20.3 27.8 32-9-.4-18.2-.7-27.5-.7-9.4 0-18.7.2-27.8.7 9-11.7 18.3-22.4 27.5-32zm-74 58.9c-4.9 7.7-9.8 15.6-14.4 23.7-4.6 8-8.9 16-13 24-5.4-13.4-10-26.8-13.8-39.8 13.1-3.1 26.9-5.8 41.2-7.9zm-90.5 125.2c-35.4-15.1-58.3-34.9-58.3-50.6 0-15.7 22.9-35.6 58.3-50.6 8.6-3.7 18-7 27.7-10.1 5.7 19.6 13.2 40 22.5 60.9-9.2 20.8-16.6 41.1-22.2 60.6-9.9-3.1-19.3-6.5-28-10.2zM310 490c-13.6-7.8-19.5-37.5-14.9-75.7 1.1-9.4 2.9-19.3 5.1-29.4 19.6 4.8 41 8.5 63.5 10.9 13.5 18.5 27.5 35.3 41.6 50-32.6 30.3-63.2 46.9-84 46.9-4.5-.1-8.3-1-11.3-2.7zm237.2-76.2c4.7 38.2-1.1 67.9-14.6 75.8-3 1.8-6.9 2.6-11.5 2.6-20.7 0-51.4-16.5-84-46.6 14-14.7 28-31.4 41.3-49.9 22.6-2.4 44-6.1 63.6-11 2.3 10.1 4.1 19.8 5.2 29.1zm38.5-66.7c-8.6 3.7-18 7-27.7 10.1-5.7-19.6-13.2-40-22.5-60.9 9.2-20.8 16.6-41.1 22.2-60.6 9.9 3.1 19.3 6.5 28.1 10.2 35.4 15.1 58.3 34.9 58.3 50.6-.1 15.7-23 35.6-58.4 50.6zM320.8 78.4z"/><circle cx="420.9" cy="296.5" r="45.7"/><path d="M520.5 78.1z"/></g></svg>
+</file>
+
+<file path="src/reportWebVitals.js">
+const reportWebVitals = onPerfEntry => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(onPerfEntry);
+      getFID(onPerfEntry);
+      getFCP(onPerfEntry);
+      getLCP(onPerfEntry);
+      getTTFB(onPerfEntry);
+    });
+  }
+};
+
+export default reportWebVitals;
+</file>
+
+<file path="src/setupTests.js">
+// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// allows you to do things like:
+// expect(element).toHaveTextContent(/react/i)
+// learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom';
+</file>
+
+<file path="src/styles/App.css">
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
+}
+
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+  position: relative;
+}
+
+/* Header Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+.info-icon {
+  width: 20px;
+  height: 20px;
+  background: #333;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.timer {
+  font-size: 16px;
+  font-weight: 500;
+  color: #666;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.header-icons {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #666;
+  cursor: pointer;
+}
+
+.icon:hover {
+  background: #e0e0e0;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Text Chat Styles */
+.text-chat {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 30px;
+}
+
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.user-message {
+  align-items: flex-end;
+}
+
+.ai-message {
+  align-items: flex-start;
+}
+
+.message-bubble {
+  max-width: 70%;
+  padding: 12px 16px;
+  border-radius: 18px;
+  position: relative;
+}
+
+.user-bubble {
+  background: #007bff;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.ai-bubble {
+  background: #f1f3f4;
+  color: #333;
+  border-bottom-left-radius: 4px;
+}
+
+.message-text {
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.message-timestamp {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.message-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.action-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #666;
+  cursor: pointer;
+}
+
+.ai-indicator {
+  position: absolute;
+  top: -5px;
+  left: 10px;
+  font-size: 18px;
+  color: #ff9800;
+}
+
+/* Input Area */
+.input-area {
+  padding: 20px 30px;
+  background: white;
+  border-top: 1px solid #e0e0e0;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8f9fa;
+  border-radius: 25px;
+  padding: 8px 15px;
+}
+
+.message-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: #333;
+}
+
+.message-input::placeholder {
+  color: #999;
+}
+
+.send-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #007bff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background 0.2s;
+}
+
+.send-button:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.send-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Voice Chat Styles */
+.voice-chat {
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.voice-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.decoration {
+  position: absolute;
+}
+
+.decoration-top-left {
+  top: 20px;
+  left: 20px;
+}
+
+.decoration-mid-left {
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+}
+
+.decoration-top-right {
+  top: 20px;
+  right: 20px;
+}
+
+.decoration-bottom-left {
+  bottom: 20px;
+  left: 20px;
+}
+
+.decoration-bottom-right {
+  bottom: 20px;
+  right: 20px;
+}
+
+.shelf {
+  width: 60px;
+  height: 20px;
+  background: #8d6e63;
+  border-radius: 2px;
+  position: relative;
+}
+
+.book {
+  width: 8px;
+  height: 15px;
+  background: #795548;
+  position: absolute;
+  top: -15px;
+  border-radius: 1px;
+}
+
+.book:nth-child(1) { left: 5px; }
+.book:nth-child(2) { left: 15px; }
+
+.vase {
+  width: 12px;
+  height: 12px;
+  background: #4caf50;
+  border-radius: 50%;
+  position: absolute;
+  top: -12px;
+  right: 5px;
+}
+
+.plant {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  position: absolute;
+  top: -15px;
+}
+
+.plant-red { background: #f44336; left: 5px; }
+.plant-cactus { background: #4caf50; left: 25px; }
+.plant-large { background: #66bb6a; width: 25px; height: 25px; }
+
+.object {
+  width: 10px;
+  height: 10px;
+  background: #ff9800;
+  border-radius: 2px;
+  position: absolute;
+  top: -10px;
+  right: 5px;
+}
+
+.frame {
+  border: 2px solid #8d6e63;
+  background: white;
+  position: relative;
+}
+
+.frame-large {
+  width: 40px;
+  height: 50px;
+  margin-bottom: 10px;
+}
+
+.frame-small {
+  width: 25px;
+  height: 25px;
+  margin-bottom: 10px;
+}
+
+.artwork {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #2196f3, #ff9800, #9c27b0);
+  opacity: 0.7;
+}
+
+.landscape {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #4caf50, #8bc34a);
+  opacity: 0.7;
+}
+
+.stickies {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sticky {
+  width: 15px;
+  height: 15px;
+  background: #ffeb3b;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+}
+
+.monitor {
+  width: 30px;
+  height: 20px;
+  background: #424242;
+  border-radius: 2px;
+  position: relative;
+}
+
+.monitor::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 8px;
+  background: #424242;
+}
+
+.papers {
+  width: 20px;
+  height: 15px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  position: absolute;
+  top: 5px;
+  left: 35px;
+}
+
+.books-stack {
+  width: 20px;
+  height: 15px;
+  background: #795548;
+  border-radius: 2px;
+  position: relative;
+}
+
+.coffee-mug {
+  width: 12px;
+  height: 12px;
+  background: #8d6e63;
+  border-radius: 50%;
+  position: absolute;
+  top: 5px;
+  left: 25px;
+}
+
+.voice-content {
+  text-align: center;
+  z-index: 1;
+}
+
+.profile-cards {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.profile-card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  min-width: 120px;
+}
+
+.profile-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.user-avatar {
+  background: #e3f2fd;
+  border: 2px solid #2196f3;
+}
+
+.ai-avatar {
+  background: #fff3e0;
+  border: 2px solid #ff9800;
+}
+
+.profile-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.profile-role {
+  font-size: 12px;
+  color: #666;
+}
+
+.connection-line {
+  width: 60px;
+  height: 2px;
+  background: #007bff;
+  margin: 0 auto 20px;
+  border-radius: 1px;
+}
+
+.voice-instructions {
+  font-size: 16px;
+  color: #666;
+}
+
+.voice-mic-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  position: relative;
+}
+
+.voice-mic-button {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: none;
+  background: #e0e0e0;
+  color: #666;
+  font-size: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.voice-mic-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.voice-mic-button.recording {
+  background: #f44336;
+  color: white;
+}
+
+.voice-mic-button.recording:hover {
+  background: #d32f2f;
+}
+
+/* Sound Wave Animation */
+.sound-wave-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.sound-wave {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: calc(1px + var(--audio-level, 0) * 1px) solid rgba(244, 67, 54, 0.6);
+  border-radius: 50%;
+  opacity: var(--wave-intensity, 0);
+  animation: soundWavePulse 1.8s infinite ease-out;
+  filter: blur(calc(2px - var(--audio-level, 0) * 0.3px));
+}
+
+.sound-wave-1 {
+  width: calc(60px + var(--audio-level, 0) * 10px);
+  height: calc(60px + var(--audio-level, 0) * 10px);
+  animation-delay: 0s;
+  animation-duration: calc(1.8s - var(--audio-level, 0) * 0.2s);
+}
+
+.sound-wave-2 {
+  width: calc(75px + var(--audio-level, 0) * 12px);
+  height: calc(75px + var(--audio-level, 0) * 12px);
+  animation-delay: 0.2s;
+  animation-duration: calc(1.9s - var(--audio-level, 0) * 0.2s);
+}
+
+.sound-wave-3 {
+  width: calc(90px + var(--audio-level, 0) * 15px);
+  height: calc(90px + var(--audio-level, 0) * 15px);
+  animation-delay: 0.4s;
+  animation-duration: calc(2.0s - var(--audio-level, 0) * 0.2s);
+}
+
+.sound-wave-4 {
+  width: calc(105px + var(--audio-level, 0) * 18px);
+  height: calc(105px + var(--audio-level, 0) * 18px);
+  animation-delay: 0.6s;
+  animation-duration: calc(2.1s - var(--audio-level, 0) * 0.2s);
+}
+
+.sound-wave-5 {
+  width: calc(120px + var(--audio-level, 0) * 20px);
+  height: calc(120px + var(--audio-level, 0) * 20px);
+  animation-delay: 0.8s;
+  animation-duration: calc(2.2s - var(--audio-level, 0) * 0.2s);
+}
+
+@keyframes soundWavePulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: calc(var(--wave-intensity, 0) * 0.4);
+  }
+  40% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: calc(var(--wave-intensity, 0) * 0.25);
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: calc(var(--wave-intensity, 0) * 0.1);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+}
+
+
+.control-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  background: white;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+  border-radius: 35px;
+  padding: 10px 10px;
+  max-width: fit-content;
+  margin: 30px auto 20px auto;
+}
+
+.control-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Active prominent buttons (with text) */
+.active-prominent {
+  padding: 12px 24px;
+  background: #2c2c2c;
+  color: white;
+}
+
+.active-prominent .mic-icon,
+.active-prominent .write-icon {
+  font-size: 18px;
+}
+
+.active-prominent .button-text {
+  font-size: 16px;
+}
+
+/* Icon-only buttons (inactive state) */
+.mic-button-icon,
+.write-button-icon {
+  padding: 12px;
+  background: white;
+  color: #333;
+  width: 48px;
+  height: 48px;
+  justify-content: center;
+}
+
+.mic-button-icon .mic-icon,
+.write-button-icon .write-icon {
+  font-size: 20px;
+}
+
+/* End session button */
+.end-button {
+  padding: 12px 24px;
+  background: white;
+  color: #333;
+}
+
+/* Hover effects */
+.control-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.active-prominent:hover {
+  background: #1a1a1a;
+}
+
+.mic-button-icon:hover,
+.write-button-icon:hover,
+.end-button:hover {
+  background: #f8f9fa;
+  border-color: #ccc;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.feedback-modal {
+  background: white;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header h2 {
+  font-size: 24px;
+  color: #333;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  padding: 30px;
+}
+
+.score-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.overall-score {
+  display: inline-block;
+}
+
+.score-number {
+  font-size: 48px;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 5px;
+}
+
+.score-label {
+  font-size: 16px;
+  color: #666;
+}
+
+.categories-section {
+  margin-bottom: 30px;
+}
+
+.categories-section h3 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.category-card {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+  border-left: 4px solid #007bff;
+}
+
+.category-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.category-score {
+  font-size: 24px;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 8px;
+}
+
+.category-feedback {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.strengths-section,
+.improvement-section,
+.next-steps-section {
+  margin-bottom: 25px;
+}
+
+.strengths-section h3,
+.improvement-section h3,
+.next-steps-section h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.strengths-list,
+.improvement-list,
+.next-steps-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.strength-item,
+.improvement-item,
+.next-step-item {
+  padding: 8px 0;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.strength-item {
+  color: #4caf50;
+}
+
+.improvement-item {
+  color: #ff9800;
+}
+
+.next-step-item {
+  color: #2196f3;
+}
+
+.modal-footer {
+  padding: 20px 30px;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.close-feedback-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.close-feedback-button:hover {
+  background: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    padding: 15px 20px;
+  }
+
+  .header-title {
+    font-size: 16px;
+  }
+
+  .messages-container {
+    padding: 15px 20px;
+  }
+
+  .input-area {
+    padding: 15px 20px;
+  }
+
+  .tab-controls {
+    padding: 10px 20px;
+  }
+
+  .profile-cards {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .categories-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</file>
+
+</files>
