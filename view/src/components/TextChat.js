@@ -44,6 +44,7 @@ function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }
     try {
       // Register message handlers (they persist in Map, but ensure they're set)
       websocketService.onMessage('question', handleQuestionMessage);
+      websocketService.onMessage('follow_up_question', handleFollowUpQuestionMessage);
       websocketService.onMessage('evaluation', handleEvaluationMessage);
 
       // Enhanced status change handler that also tracks reconnection attempts
@@ -73,6 +74,7 @@ function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }
     if (connectionStatus === CONNECTION_STATUS.CONNECTED) {
       // Ensure handlers are registered after reconnection
       websocketService.onMessage('question', handleQuestionMessage);
+      websocketService.onMessage('follow_up_question', handleFollowUpQuestionMessage);
       websocketService.onMessage('evaluation', handleEvaluationMessage);
     }
   }, [connectionStatus]);
@@ -87,6 +89,7 @@ function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }
       websocketService.resetReconnectAttempt();
       // Re-register handlers
       websocketService.onMessage('question', handleQuestionMessage);
+      websocketService.onMessage('follow_up_question', handleFollowUpQuestionMessage);
       websocketService.onMessage('evaluation', handleEvaluationMessage);
       // Connect
       websocketService.connect(wsUrl);
@@ -125,6 +128,29 @@ function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }
     if (onProgressUpdate) {
       onProgressUpdate(progress);
     }
+  };
+
+  const handleFollowUpQuestionMessage = (message) => {
+    const aiMessage = {
+      id: Date.now(),
+      text: message.text,
+      sender: 'ai',
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      type: 'text',
+      metadata: {
+        questionId: message.question_id,
+        parentQuestionId: message.parent_question_id,
+        questionType: 'follow_up',
+        generatedReason: message.generated_reason,
+        orderInSequence: message.order_in_sequence,
+        audioData: message.audio_data,
+      },
+    };
+
+    setMessages(prev => [...prev, aiMessage]);
+
+    // Update current question ID to the follow-up question
+    setCurrentQuestionId(message.question_id);
   };
 
   const handleEvaluationMessage = (evaluation) => {
