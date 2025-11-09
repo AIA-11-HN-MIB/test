@@ -11,7 +11,7 @@ class WebSocketService {
     this.shouldReconnect = true;
   }
 
-  connect(wsUrl) {
+  connect(wsUrl, isReconnect = false) {
     // Validate WebSocket URL
     if (!wsUrl || (!wsUrl.startsWith('ws://') && !wsUrl.startsWith('wss://'))) {
       throw new Error('Invalid WebSocket URL');
@@ -24,9 +24,19 @@ class WebSocketService {
     }
 
     this.wsUrl = wsUrl;
-    this.shouldReconnect = true;
+    // Only set shouldReconnect to true if not already in a reconnection cycle
+    // This preserves the flag during automatic reconnection attempts
+    if (!isReconnect) {
+      this.shouldReconnect = true;
+    }
 
     try {
+      // Close existing connection if any
+      if (this.ws) {
+        this.ws.close();
+        this.ws = null;
+      }
+
       this.ws = new WebSocket(wsUrl);
 
       this.ws.onopen = this.handleOpen.bind(this);
@@ -91,11 +101,18 @@ class WebSocketService {
   attemptReconnect() {
     const delay = WS_CONFIG.RECONNECT_DELAYS[this.reconnectAttempt] || 16000;
 
-    console.log(`Reconnecting in ${delay}ms (attempt ${this.reconnectAttempt + 1}/${WS_CONFIG.RECONNECT_ATTEMPTS})`);
+    // Increment attempt count before scheduling reconnect
+    this.reconnectAttempt++;
+    const currentAttempt = this.reconnectAttempt;
+
+    console.log(`Reconnecting in ${delay}ms (attempt ${currentAttempt}/${WS_CONFIG.RECONNECT_ATTEMPTS})`);
+
+    // Update status with current attempt info
+    this.updateStatus(CONNECTION_STATUS.RECONNECTING);
 
     this.reconnectTimeout = setTimeout(() => {
-      this.reconnectAttempt++;
-      this.connect(this.wsUrl);
+      // Pass isReconnect=true to preserve shouldReconnect flag
+      this.connect(this.wsUrl, true);
     }, delay);
   }
 
@@ -160,6 +177,14 @@ class WebSocketService {
       default:
         return CONNECTION_STATUS.DISCONNECTED;
     }
+  }
+
+  getReconnectAttempt() {
+    return this.reconnectAttempt;
+  }
+
+  resetReconnectAttempt() {
+    this.reconnectAttempt = 0;
   }
 }
 

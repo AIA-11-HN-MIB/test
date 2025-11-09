@@ -1050,6 +1050,54 @@ body {
   color: #f44336;
 }
 
+.connection-banner .reconnect-button {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.connection-banner .reconnect-button:hover {
+  background: #1976d2;
+}
+
+.connection-banner .reconnect-button:active {
+  background: #1565c0;
+}
+
+.connection-banner .reconnect-button .material-icons {
+  font-size: 18px;
+  color: white;
+}
+
+.connection-banner .reconnect-spinner {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.connection-banner .reconnect-spinner .material-icons {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Progress Bar */
 .progress-bar-container {
   padding: 10px 20px;

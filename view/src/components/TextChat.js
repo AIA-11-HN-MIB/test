@@ -11,19 +11,30 @@ function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }
   const [connectionStatus, setConnectionStatus] = useState(CONNECTION_STATUS.DISCONNECTED);
   const [currentProgress, setCurrentProgress] = useState({ index: 0, total: 0 });
   const [currentQuestionId, setCurrentQuestionId] = useState(null);
+  const [reconnectAttempt, setReconnectAttempt] = useState(0);
   const messagesEndRef = useRef(null);
   const isInitialized = useRef(false);
+  const wsUrlRef = useRef(null);
 
   // Initialize WebSocket connection
   useEffect(() => {
     if (wsUrl && !isInitialized.current) {
       isInitialized.current = true;
+      wsUrlRef.current = wsUrl;
+      initializeWebSocket();
+    } else if (wsUrl && wsUrl !== wsUrlRef.current) {
+      // URL changed, disconnect old connection and connect to new one
+      wsUrlRef.current = wsUrl;
+      websocketService.disconnect();
       initializeWebSocket();
     }
 
+    // Only disconnect on actual unmount, not on dependency changes
     return () => {
+      // This cleanup only runs on unmount
       if (isInitialized.current) {
         websocketService.disconnect();
+        isInitialized.current = false;
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -31,16 +42,57 @@ function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }
 
   const initializeWebSocket = () => {
     try {
-      // Register message handlers
+      // Register message handlers (they persist in Map, but ensure they're set)
       websocketService.onMessage('question', handleQuestionMessage);
       websocketService.onMessage('evaluation', handleEvaluationMessage);
-      websocketService.onStatusChange(setConnectionStatus);
+
+      // Enhanced status change handler that also tracks reconnection attempts
+      const handleStatusChange = (status) => {
+        setConnectionStatus(status);
+        // Update reconnection attempt count when status changes
+        if (status === CONNECTION_STATUS.RECONNECTING) {
+          const attempt = websocketService.getReconnectAttempt();
+          setReconnectAttempt(attempt);
+        } else if (status === CONNECTION_STATUS.CONNECTED) {
+          // Reset attempt count when connected
+          setReconnectAttempt(0);
+        }
+      };
+      websocketService.onStatusChange(handleStatusChange);
 
       // Connect
       websocketService.connect(wsUrl);
     } catch (error) {
       toast.error('Failed to connect to interview service');
       console.error('WebSocket initialization error:', error);
+    }
+  };
+
+  // Re-register handlers when connection is restored
+  useEffect(() => {
+    if (connectionStatus === CONNECTION_STATUS.CONNECTED) {
+      // Ensure handlers are registered after reconnection
+      websocketService.onMessage('question', handleQuestionMessage);
+      websocketService.onMessage('evaluation', handleEvaluationMessage);
+    }
+  }, [connectionStatus]);
+
+  const handleReconnect = () => {
+    if (!wsUrl) {
+      toast.warning('No WebSocket URL available');
+      return;
+    }
+    try {
+      // Reset reconnection attempt counter
+      websocketService.resetReconnectAttempt();
+      // Re-register handlers
+      websocketService.onMessage('question', handleQuestionMessage);
+      websocketService.onMessage('evaluation', handleEvaluationMessage);
+      // Connect
+      websocketService.connect(wsUrl);
+    } catch (error) {
+      toast.error('Failed to reconnect');
+      console.error('Reconnect error:', error);
     }
   };
 
@@ -135,17 +187,48 @@ function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }
   const renderConnectionStatus = () => {
     if (connectionStatus === CONNECTION_STATUS.CONNECTED) return null;
 
-    const statusMessages = {
-      [CONNECTION_STATUS.DISCONNECTED]: 'Disconnected',
-      [CONNECTION_STATUS.PLANNING]: 'Planning interview...',
-      [CONNECTION_STATUS.CONNECTING]: 'Connecting...',
-      [CONNECTION_STATUS.RECONNECTING]: 'Reconnecting...',
+    const getStatusMessage = () => {
+      switch (connectionStatus) {
+        case CONNECTION_STATUS.DISCONNECTED:
+          return 'Disconnected';
+        case CONNECTION_STATUS.PLANNING:
+          return 'Planning interview...';
+        case CONNECTION_STATUS.CONNECTING:
+          return 'Connecting...';
+        case CONNECTION_STATUS.RECONNECTING:
+          const maxAttempts = 5; // From WS_CONFIG
+          if (reconnectAttempt > 0 && reconnectAttempt <= maxAttempts) {
+            return `Reconnecting... (Attempt ${reconnectAttempt}/${maxAttempts})`;
+          }
+          return 'Reconnecting...';
+        default:
+          return 'Connecting...';
+      }
     };
+
+    const statusMessage = getStatusMessage();
 
     return (
       <div className={`connection-banner connection-${connectionStatus}`}>
-        <span className="material-icons">info</span>
-        <span>{statusMessages[connectionStatus]}</span>
+        <span className="material-icons">
+          {connectionStatus === CONNECTION_STATUS.RECONNECTING ? 'sync' : 'info'}
+        </span>
+        <span>{statusMessage}</span>
+        {connectionStatus === CONNECTION_STATUS.DISCONNECTED && (
+          <button
+            onClick={handleReconnect}
+            className="reconnect-button"
+            title="Reconnect to interview service"
+          >
+            <span className="material-icons">refresh</span>
+            Reconnect
+          </button>
+        )}
+        {connectionStatus === CONNECTION_STATUS.RECONNECTING && reconnectAttempt > 0 && (
+          <span className="reconnect-spinner">
+            <span className="material-icons spin">sync</span>
+          </span>
+        )}
       </div>
     );
   };
