@@ -1,0 +1,342 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+      "title": "Elios AI Interview Service",
+      "description": "AI-powered mock interview platform",
+      "version": "0.1.0"
+    },
+    "paths": {
+      "/api/interviews/plan": {
+        "post": {
+          "tags": [
+            "Interviews",
+            "Interviews"
+          ],
+          "summary": "Plan interview with adaptive questions",
+          "description": "Plan interview by generating n questions with ideal answers.\n\nThis endpoint triggers the pre-planning phase:\n1. Calculates n based on skill diversity (max 5)\n2. Generates n questions with ideal_answer + rationale\n3. Returns interview with status=PREPARING (async process)\n\nArgs:\n    request: Planning request with cv_analysis_id and candidate_id\n    session: Database session\n\nReturns:\n    Planning status with interview_id\n\nRaises:\n    HTTPException: If CV analysis not found",
+          "operationId": "plan_interview_api_interviews_plan_post",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanInterviewRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "202": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PlanningStatusResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/interviews/{interview_id}/plan": {
+        "get": {
+          "tags": [
+            "Interviews",
+            "Interviews"
+          ],
+          "summary": "Get interview planning status",
+          "description": "Get interview planning status.\n\nArgs:\n    interview_id: Interview UUID\n    session: Database session\n\nReturns:\n    Planning status details\n\nRaises:\n    HTTPException: If interview not found",
+          "operationId": "get_planning_status_api_interviews__interview_id__plan_get",
+          "parameters": [
+            {
+              "name": "interview_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid",
+                "title": "Interview Id"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PlanningStatusResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/interviews/{interview_id}/start": {
+        "put": {
+          "tags": [
+            "Interviews",
+            "Interviews"
+          ],
+          "summary": "Start interview (move to IN_PROGRESS)",
+          "description": "Start interview session.\n\nArgs:\n    interview_id: Interview UUID\n    session: Database session\n\nReturns:\n    Updated interview details\n\nRaises:\n    HTTPException: If interview not found or invalid state",
+          "operationId": "start_interview_api_interviews__interview_id__start_put",
+          "parameters": [
+            {
+              "name": "interview_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid",
+                "title": "Interview Id"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/InterviewResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "HTTPValidationError": {
+          "properties": {
+            "detail": {
+              "items": {
+                "$ref": "#/components/schemas/ValidationError"
+              },
+              "type": "array",
+              "title": "Detail"
+            }
+          },
+          "type": "object",
+          "title": "HTTPValidationError"
+        },
+        "InterviewResponse": {
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Id"
+            },
+            "candidate_id": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Candidate Id"
+            },
+            "status": {
+              "type": "string",
+              "title": "Status"
+            },
+            "cv_analysis_id": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cv Analysis Id"
+            },
+            "question_count": {
+              "type": "integer",
+              "title": "Question Count"
+            },
+            "current_question_index": {
+              "type": "integer",
+              "title": "Current Question Index"
+            },
+            "progress_percentage": {
+              "type": "number",
+              "title": "Progress Percentage"
+            },
+            "ws_url": {
+              "type": "string",
+              "title": "Ws Url"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Created At"
+            },
+            "started_at": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Started At"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id",
+            "candidate_id",
+            "status",
+            "cv_analysis_id",
+            "question_count",
+            "current_question_index",
+            "progress_percentage",
+            "ws_url",
+            "created_at",
+            "started_at"
+          ],
+          "title": "InterviewResponse",
+          "description": "Response with interview details and WebSocket URL."
+        },
+        "PlanInterviewRequest": {
+          "properties": {
+            "cv_analysis_id": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Cv Analysis Id"
+            },
+            "candidate_id": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Candidate Id"
+            }
+          },
+          "type": "object",
+          "required": [
+            "cv_analysis_id",
+            "candidate_id"
+          ],
+          "title": "PlanInterviewRequest",
+          "description": "Request to plan interview with adaptive questions."
+        },
+        "PlanningStatusResponse": {
+          "properties": {
+            "interview_id": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Interview Id"
+            },
+            "status": {
+              "type": "string",
+              "title": "Status"
+            },
+            "planned_question_count": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Planned Question Count"
+            },
+            "plan_metadata": {
+              "anyOf": [
+                {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Plan Metadata"
+            },
+            "message": {
+              "type": "string",
+              "title": "Message"
+            }
+          },
+          "type": "object",
+          "required": [
+            "interview_id",
+            "status",
+            "planned_question_count",
+            "plan_metadata",
+            "message"
+          ],
+          "title": "PlanningStatusResponse",
+          "description": "Response with planning status."
+        },
+        "ValidationError": {
+          "properties": {
+            "loc": {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ]
+              },
+              "type": "array",
+              "title": "Location"
+            },
+            "msg": {
+              "type": "string",
+              "title": "Message"
+            },
+            "type": {
+              "type": "string",
+              "title": "Error Type"
+            }
+          },
+          "type": "object",
+          "required": [
+            "loc",
+            "msg",
+            "type"
+          ],
+          "title": "ValidationError"
+        }
+      }
+    }
+  }
