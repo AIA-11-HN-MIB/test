@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { mockFeedback } from '../data/mockData';
+import '../style/FeedbackModal.css';
 
 function FeedbackModal({ evaluations = [], onClose }) {
   // Transform evaluations to feedback format

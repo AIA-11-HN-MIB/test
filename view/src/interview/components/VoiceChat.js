@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { userProfile, aiProfile } from '../data/mockData';
+import '../style/VoiceChat.css';
 
 function VoiceChat() {
   const [isSpeaking, setIsSpeaking] = useState(false);

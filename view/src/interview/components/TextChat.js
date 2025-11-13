@@ -1,15 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Message from './Message';
-import { mockMessages } from '../data/mockData';
-import websocketService from '../services/websocketService';
-import { CONNECTION_STATUS } from '../services/config';
+import websocketService from '../utils/websocketService';
+import { CONNECTION_STATUS } from '../utils/config';
 import toast from '../utils/toast';
+import '../style/TextChat.css';
 
-function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }) {
-  const [messages, setMessages] = useState(mockMessages);
+function TextChat({ interviewId, wsUrl, onEvaluationReceived }) {
+  const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [connectionStatus, setConnectionStatus] = useState(CONNECTION_STATUS.DISCONNECTED);
-  const [currentProgress, setCurrentProgress] = useState({ index: 0, total: 0 });
   const [currentQuestionId, setCurrentQuestionId] = useState(null);
   const [reconnectAttempt, setReconnectAttempt] = useState(0);
   const messagesEndRef = useRef(null);
@@ -117,17 +116,6 @@ function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }
 
     // Track current question ID
     setCurrentQuestionId(message.question_id);
-
-    // Update progress
-    const progress = {
-      index: message.index,
-      total: message.total,
-    };
-    setCurrentProgress(progress);
-
-    if (onProgressUpdate) {
-      onProgressUpdate(progress);
-    }
   };
 
   const handleFollowUpQuestionMessage = (message) => {
@@ -259,28 +247,9 @@ function TextChat({ interviewId, wsUrl, onEvaluationReceived, onProgressUpdate }
     );
   };
 
-  const renderProgressBar = () => {
-    if (currentProgress.total === 0) return null;
-
-    return (
-      <div className="progress-bar-container">
-        <div className="progress-info">
-          Question {currentProgress.index} of {currentProgress.total}
-        </div>
-        <div className="progress-bar">
-          <div
-            className="progress-fill"
-            style={{ width: `${(currentProgress.index / currentProgress.total) * 100}%` }}
-          />
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="text-chat">
       {renderConnectionStatus()}
-      {renderProgressBar()}
 
       {/* Messages Area */}
       <div className="messages-container">

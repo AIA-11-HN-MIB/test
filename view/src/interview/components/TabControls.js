@@ -1,4 +1,5 @@
 import React from 'react';
+import '../style/TabControls.css';
 
 function TabControls({ activeTab, onTabSwitch, onEndSession }) {
   return (
